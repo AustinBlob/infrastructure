@@ -1,4 +1,10 @@
 data "aws_caller_identity" "current" {}
+
+data "aws_route53_zone" "webapp_hosted_zone" {
+  name         = "austinpgraham.com."
+  private_zone = false
+}
+
 locals {
   account_id  = data.aws_caller_identity.current.account_id
   domain_name = "austinpgraham.com"
@@ -115,5 +121,17 @@ resource "aws_cloudfront_distribution" "webapp_distributor" {
     acm_certificate_arn      = aws_acm_certificate.webapp_cert.arn
     minimum_protocol_version = "TLSv1"
     ssl_support_method       = "sni-only"
+  }
+}
+
+resource "aws_route53_record" "webapp_cloudfront_alias" {
+  depends_on = [aws_cloudfront_distribution.webapp_distributor]
+  zone_id    = data.aws_route53_zone.webapp_hosted_zone.zone_id
+  name       = local.domain_name
+  type       = "A"
+  alias {
+    name                   = aws_cloudfront_distribution.webapp_distributor.domain_name
+    zone_id                = aws_cloudfront_distribution.webapp_distributor.hosted_zone_id
+    evaluate_target_health = true
   }
 }
