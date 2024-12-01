@@ -27,7 +27,7 @@ resource "aws_s3_bucket_policy" "webapp_bucket_policy" {
           "Service" : "cloudfront.amazonaws.com"
         },
         "Action" : "s3:GetObject",
-        "Resource" : "arn:aws:s3::${aws_s3_bucket.webapp_bucket.id}:/*",
+        "Resource" : "arn:aws:s3:::${aws_s3_bucket.webapp_bucket.id}/*",
         "Condition" : {
           "StringEquals" : {
             "AWS:SourceArn" : "arn:aws:cloudfront::${local.account_id}:distribution/${aws_cloudfront_distribution.webapp_distributor.id}"
@@ -48,6 +48,7 @@ resource "aws_cloudfront_origin_access_control" "webapp_cloudfront_oac" {
 resource "aws_acm_certificate" "webapp_cert" {
   domain_name       = local.domain_name
   validation_method = "DNS"
+  provider          = aws.us_east_1 # Required by AWS to use with cloudfront
 
   tags = {
     Environment = local.env

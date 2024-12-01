@@ -7,6 +7,7 @@ resource "github_repository" "repo_blog_template" {
   squash_merge_commit_message = "COMMIT_MESSAGES"
   delete_branch_on_merge      = true
   allow_update_branch         = true
+  allow_auto_merge            = true
   has_issues                  = true
 }
 
