@@ -18,7 +18,7 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: 1.9.8
+          terraform_version: 1.10.1
 
       - name: Terraform Init
         run: terraform init
@@ -28,7 +28,6 @@ jobs:
         run: terraform validate
         working-directory: ./terraform
       
-      # TODO: Fix AWS credentials
-      # - name: Terraform Plan
-      #   run: terraform plan -var="github_organization=AustinBlob" -var="github_token=${{ secrets.TERRAFORM_GITHUB_TOKEN }}"
-      #   working-directory: ./terraform
+      - name: Terraform Plan
+        run: terraform plan
+        working-directory: ./terraform

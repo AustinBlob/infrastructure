@@ -1,4 +1,11 @@
 terraform {
+  cloud {
+    organization = "Personal-Blob"
+    workspaces {
+      name = "blog-site"
+    }
+  }
+
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -14,8 +21,7 @@ terraform {
 }
 
 provider "aws" {
-  region  = "us-west-2"
-  profile = "default"
+  region = "us-west-2"
 }
 
 # Somre resources required to be in us-east-1,
